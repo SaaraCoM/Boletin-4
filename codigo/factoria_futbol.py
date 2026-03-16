@@ -271,8 +271,6 @@ class Factoria:
             if int(fila[campo]) < 0:
                 raise ValueError(f"Cantidad negativa en {campo} para {fila['JUGADOR']} ({fila['TEMPORADA']}).")
 
-        # Interpretación operativa de "positivas" del enunciado: no se admiten valores negativos.
-
         if int(fila["PCOMPLETOS"]) > int(fila["PTITULAR"]):
             raise ValueError(f"PCOMPLETOS > PTITULAR en {fila['JUGADOR']} ({fila['TEMPORADA']}).")
 
