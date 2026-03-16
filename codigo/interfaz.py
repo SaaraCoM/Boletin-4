@@ -627,7 +627,8 @@ class AppFutbol(ctk.CTk):
 
     def _worker_cargar_excel(self, ruta: str) -> None:
         try:
-            experto = FactoriaFutbol.cargar_excel(ruta)
+            liga = FactoriaFutbol.cargar_excel(ruta)
+            experto = liga._construir_experto()
             self.after(0, lambda: self._fin_carga_correcta(experto, ruta))
         except Exception as error:
             self.after(0, lambda: self._fin_carga_error(error))

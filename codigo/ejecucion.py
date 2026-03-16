@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import sys
 
-from experto_futbol import ExpertoFutbol
-from factoria_futbol import FactoriaFutbol
+from factoria_futbol import Factoria
 
 
 def ejecutar_tests() -> tuple[object, str]:
-    ruta_excel = FactoriaFutbol.resolver_ruta_excel("Plantillas1D-2017-18.xls")
-    experto = FactoriaFutbol.cargar_excel(ruta_excel)
+    ruta_excel = Factoria.resolver_ruta_excel("Plantillas1D-2017-18.xls")
+    liga = Factoria.cargar_excel(ruta_excel)
     errores: list[str] = []
 
     def check(n: int, cond: bool, esperado: str, obtenido) -> None:
@@ -18,7 +17,7 @@ def ejecutar_tests() -> tuple[object, str]:
             print(f"✅ Ej{n:02d}: OK")
 
     r = {
-        i: getattr(experto, f"ejercicio_{i:02d}")(ExpertoFutbol.get_default_k(i), False)
+        i: getattr(liga, f"ejercicio_{i:02d}")(liga.get_default_k(i), False)
         for i in range(1, 34)
     }
 
@@ -46,11 +45,11 @@ def ejecutar_tests() -> tuple[object, str]:
         sys.exit(1)
 
     print("\n✅ Todos los tests pasaron. Lanzando interfaz...")
-    return experto, ruta_excel
+    return liga, ruta_excel
 
 
 if __name__ == "__main__":
-    experto, ruta_excel = ejecutar_tests()
+    liga, ruta_excel = ejecutar_tests()
     try:
         from interfaz import AppFutbol
     except ModuleNotFoundError as error:
@@ -59,5 +58,5 @@ if __name__ == "__main__":
         print("pip install customtkinter openpyxl xlrd pillow")
         sys.exit(1)
 
-    app = AppFutbol(experto_inicial=experto, ruta_inicial=ruta_excel)
+    app = AppFutbol(experto_inicial=liga._construir_experto(), ruta_inicial=ruta_excel)
     app.mainloop()
