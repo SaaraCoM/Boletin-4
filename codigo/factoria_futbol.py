@@ -7,8 +7,6 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from openpyxl import load_workbook
-
 from equipo import Equipo
 from jugador import Jugador
 from liga import Liga
@@ -96,6 +94,11 @@ class Factoria:
 
     @staticmethod
     def _leer_xlsx(ruta: str) -> list[dict[str, object]]:
+        try:
+            from openpyxl import load_workbook
+        except ModuleNotFoundError as exc:
+            raise ModuleNotFoundError("Falta dependencia openpyxl para leer archivos .xlsx") from exc
+
         libro = load_workbook(filename=ruta, data_only=True, read_only=True)
         hoja = libro.active
         filas_iter = hoja.iter_rows(values_only=True)
