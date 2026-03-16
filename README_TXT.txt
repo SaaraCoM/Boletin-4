@@ -123,3 +123,12 @@ EJERCICIO_4/
 11. NOTA DE INTERFAZ
    - La interfaz sigue el layout del boletín y la estética solicitada.
    - Si faltan fuentes locales en ./fonts, usa fuentes de respaldo del sistema.
+
+
+12. ACTUALIZACIÓN BOLETÍN 5
+   - Se incorpora la clase Liga (archivo: liga.py) con estructura jerárquica Liga -> Temporadas -> Equipos -> Jugadores.
+   - Jugador añade propiedades derivadas: tarjetas_totales, veces_sustituido, goles_por_minuto, es_revulsivo.
+   - Equipo añade agregar_jugador y propiedades derivadas del equipo.
+   - Temporada pasa a almacenar equipos en diccionario y añade agregar_equipo y propiedades derivadas.
+   - Factoria (en factoria_futbol.py) valida datos y devuelve un objeto Liga.
+   - Se añade el generador _iterar_historial en Liga y wrappers de ejercicios para mantener compatibilidad con la lógica histórica.

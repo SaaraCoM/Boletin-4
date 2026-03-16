@@ -265,7 +265,7 @@ class ExpertoFutbol:
             "- F.C. Barcelona: Racha de 4 temporadas consecutivas siendo el máximo goleador.",
         ],
         30: [
-            "- Sevilla F.C. vs Real Betis B. S.: 9 jugadores. Ejemplos: ANTUNEZ, CARVAJAL, DIEGO R., JOSE MARI, MATEOS ...",
+            "- Sevilla F.C. vs Real Betis B. S. | Compartidos: 9 | Jugadores compartidos: ANTUNEZ, CARVAJAL, DIEGO R., JOSE MARI, MATEOS",
         ],
         31: [
             "- RAFA GONZALEZ: Promedio de 116.8 minutos por temporada (Total: 934 minutos en 8 temporadas).",
@@ -275,11 +275,11 @@ class ExpertoFutbol:
             "- NEBOT C.: Promedio de 546.0 minutos por temporada (Total: 4368 minutos en 8 temporadas).",
         ],
         32: [
-            "- UNZUE - Equipo: C. At. Osasuna, Años fuera: 14.",
-            "- A. PRATS - Equipo: R.C.D. Mallorca, Años fuera: 14.",
-            "- CAPDEVILA - Equipo: R.C.D. Espanyol, Años fuera: 14.",
-            "- ANGEL D. - Equipo: U.D. Las Palmas, Años fuera: 14.",
-            "- DEL SOL - Equipo: Real Betis B. S., Años fuera: 13.",
+            "- UNZUE (C. At. Osasuna) | Años fuera: 14",
+            "- A. PRATS (R.C.D. Mallorca) | Años fuera: 14",
+            "- CAPDEVILA (R.C.D. Espanyol) | Años fuera: 14",
+            "- ANGEL D. (U.D. Las Palmas) | Años fuera: 14",
+            "- DEL SOL (Real Betis B. S.) | Años fuera: 13",
         ],
         33: [
             "- ELDUAYEN: Racha de 8 temporadas consecutivas.",
@@ -288,14 +288,14 @@ class ExpertoFutbol:
         ],
     }
 
-    FONDO_PRINCIPAL = "#0d1117"
-    PANEL_LATERAL = "#161b22"
-    ACENTO_VERDE = "#00e676"
-    ACENTO_DORADO = "#ffd600"
-    TEXTO_PRIMARIO = "#e6edf3"
-    TEXTO_SECUNDARIO = "#8b949e"
-    BTN_ACTIVO = "#00e676"
-    BTN_INACTIVO = "#21262d"
+    FONDO_PRINCIPAL = "#ffffff"
+    PANEL_LATERAL = "#f7f7f7"
+    ACENTO_VERDE = "#2e7d32"
+    ACENTO_DORADO = "#f9a825"
+    TEXTO_PRIMARIO = "#111111"
+    TEXTO_SECUNDARIO = "#555555"
+    BTN_ACTIVO = "#43a047"
+    BTN_INACTIVO = "#e9ecef"
 
     def __init__(self, temporadas: list[Temporada], filas: list[Jugador]) -> None:
         self.temporadas = temporadas
@@ -851,10 +851,17 @@ class ExpertoFutbol:
                 compartidos = sorted(jugadores_por_equipo[equipo_a] & jugadores_por_equipo[equipo_b])
                 datos.append((len(compartidos), equipo_a, equipo_b, compartidos))
             datos.sort(key=lambda item: (-item[0], item[1], item[2]))
-            lineas = [
-                f"- {equipo_a} vs {equipo_b}: {numero} jugadores. Ejemplos: {', '.join(compartidos[:5])} ..."
-                for numero, equipo_a, equipo_b, compartidos in datos
-            ]
+            lineas = []
+            for numero, equipo_a, equipo_b, compartidos in datos:
+                if compartidos:
+                    jugadores_compartidos = ", ".join(compartidos)
+                    lineas.append(
+                        f"- {equipo_a} vs {equipo_b} | Compartidos: {numero} | Jugadores compartidos: {jugadores_compartidos}"
+                    )
+                else:
+                    lineas.append(
+                        f"- {equipo_a} vs {equipo_b} | Compartidos: 0 | Jugadores compartidos: ninguno"
+                    )
             return self._aplicar_k(lineas, k, ascendente)
         return self._ejecutar_o_cachear(30, k, ascendente, productor)
 
@@ -884,7 +891,7 @@ class ExpertoFutbol:
                 anyos_fuera = (max(conjunto) - min(conjunto) + 1) - len(conjunto)
                 datos.append((anyos_fuera, nombre, equipo))
             datos.sort(key=lambda item: (-item[0], item[1], item[2]))
-            lineas = [f"- {nombre} - Equipo: {equipo}, Años fuera: {anyos_fuera}." for anyos_fuera, nombre, equipo in datos]
+            lineas = [f"- {nombre} ({equipo}) | Años fuera: {anyos_fuera}" for anyos_fuera, nombre, equipo in datos]
             return self._aplicar_k(lineas, k, ascendente)
         return self._ejecutar_o_cachear(32, k, ascendente, productor)
 
