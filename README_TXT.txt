@@ -7,8 +7,8 @@ EJERCICIO_4/
 │   ├── jugador.py
 │   ├── equipo.py
 │   ├── temporada.py
-│   ├── experto_futbol.py
 │   ├── factoria_futbol.py
+│   ├── liga.py
 │   ├── interfaz.py
 │   └── ejecucion.py
 └── data/
@@ -41,25 +41,25 @@ EJERCICIO_4/
    - Ejemplo:
      Temporada("2011-12", 2011, lista_de_equipos)
 
-5. ARCHIVO: experto_futbol.py
-   Clase: ExpertoFutbol
+5. ARCHIVO: liga.py
+   Clase: Liga
    - Qué hace:
-     Implementa toda la lógica de negocio y los 33 ejercicios del Boletín 4.
+     Representa la raíz del modelo (Liga -> Temporadas -> Equipos -> Jugadores) e integra los ejercicios 01..33.
    - Cómo funciona:
-     Construye índices por jugador, nombre, equipo y temporada; luego calcula rankings, rachas, ascensos, descensos y agregaciones.
+     Recorre la jerarquía con `_iterar_historial`, construye índices internos y expone métodos de estadísticas históricas.
    - Funciones principales:
-     - __init__: prepara índices internos.
-     - get_default_k: devuelve el K por defecto de cada ejercicio.
-     - descripcion_ejercicio: devuelve el texto corto del ejercicio.
-     - ejercicio_01 ... ejercicio_33: resuelven cada ejercicio y devuelven list[str].
+     - agregar_temporada
+     - _iterar_historial
+     - get_default_k / descripcion_ejercicio
+     - ejercicio_01 ... ejercicio_33
    - Ejemplo:
-     experto = ExpertoFutbol(temporadas, filas)
-     top = experto.ejercicio_02(1, False)
+     liga = Factoria.cargar_excel(ruta_excel)
+     top = liga.ejercicio_02(1, False)
 
 6. ARCHIVO: factoria_futbol.py
    Clase: FactoriaFutbol
    - Qué hace:
-     Carga el Excel, limpia los datos y construye el objeto ExpertoFutbol.
+     Carga el Excel, limpia los datos y construye el objeto Liga.
    - Cómo funciona:
      1) localiza el archivo;
      2) abre .xls con xlrd o, si no está disponible, convierte offline a .xlsx;
@@ -77,7 +77,7 @@ EJERCICIO_4/
      - _crear_objetos
      - cargar_excel
    - Ejemplo:
-     experto = FactoriaFutbol.cargar_excel("../data/Plantillas1D-2017-18.xls")
+     liga = FactoriaFutbol.cargar_excel("../data/Plantillas1D-2017-18.xls")
 
 7. ARCHIVO: interfaz.py
    Clase: AppFutbol
@@ -96,7 +96,7 @@ EJERCICIO_4/
      - ejecutar_ejercicio
      - guardar_resultados
    - Ejemplo:
-     app = AppFutbol(experto_inicial=experto, ruta_inicial=ruta_excel)
+     app = AppFutbol(liga_inicial=liga, ruta_inicial=ruta_excel)
      app.mainloop()
 
 8. ARCHIVO: ejecucion.py
@@ -123,3 +123,12 @@ EJERCICIO_4/
 11. NOTA DE INTERFAZ
    - La interfaz sigue el layout del boletín y la estética solicitada.
    - Si faltan fuentes locales en ./fonts, usa fuentes de respaldo del sistema.
+
+
+12. ACTUALIZACIÓN BOLETÍN 5
+   - Se incorpora la clase Liga (archivo: liga.py) con estructura jerárquica Liga -> Temporadas -> Equipos -> Jugadores.
+   - Jugador añade propiedades derivadas: tarjetas_totales, veces_sustituido, goles_por_minuto, es_revulsivo.
+   - Equipo añade agregar_jugador y propiedades derivadas del equipo.
+   - Temporada pasa a almacenar equipos en diccionario y añade agregar_equipo y propiedades derivadas.
+   - Factoria (en factoria_futbol.py) valida datos y devuelve un objeto Liga.
+   - Se añade el generador _iterar_historial en Liga y wrappers de ejercicios para mantener compatibilidad con la lógica histórica.
