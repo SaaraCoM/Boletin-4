@@ -59,7 +59,7 @@ class AppFutbol(ctk.CTk):
 
     def __init__(self, experto_inicial: ExpertoFutbol | None = None, ruta_inicial: str | None = None) -> None:
         super().__init__()
-        ctk.set_appearance_mode("dark")
+        ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("green")
 
         self.experto: ExpertoFutbol | None = experto_inicial
@@ -176,10 +176,10 @@ class AppFutbol(ctk.CTk):
     def _crear_cabecera(self) -> None:
         self.cabecera = ctk.CTkFrame(
             self,
-            fg_color="#0b1721",
+            fg_color="#ffffff",
             corner_radius=18,
             border_width=2,
-            border_color="#1ed760",
+            border_color="#d9d9d9",
         )
         self.cabecera.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=24, pady=(20, 12))
         self.cabecera.grid_columnconfigure(1, weight=1)
@@ -213,11 +213,11 @@ class AppFutbol(ctk.CTk):
             text="📄  Cargar Excel",
             command=self._dialogo_cargar_excel,
             font=self.fuentes["texto_bold"],
-            fg_color="#117a37",
-            hover_color="#0fb84f",
-            text_color="#f6fff7",
+            fg_color="#e8f5e9",
+            hover_color="#dcedc8",
+            text_color="#111111",
             border_width=2,
-            border_color="#79ff9a",
+            border_color="#c8e6c9",
             corner_radius=14,
             width=220,
             height=56,
@@ -227,10 +227,10 @@ class AppFutbol(ctk.CTk):
     def _crear_panel_lateral(self) -> None:
         self.panel_lateral = ctk.CTkFrame(
             self,
-            fg_color="#101924",
+            fg_color="#ffffff",
             corner_radius=22,
             border_width=2,
-            border_color="#37556e",
+            border_color="#d9d9d9",
             width=380,
         )
         self.panel_lateral.grid(row=1, column=0, sticky="nsew", padx=(24, 14), pady=(0, 20))
@@ -247,10 +247,10 @@ class AppFutbol(ctk.CTk):
 
         self.tarjeta_selector = ctk.CTkFrame(
             self.panel_lateral,
-            fg_color="#182431",
+            fg_color="#ffffff",
             corner_radius=16,
             border_width=2,
-            border_color="#4b647c",
+            border_color="#d9d9d9",
         )
         self.tarjeta_selector.grid(row=1, column=0, sticky="ew", padx=22, pady=(0, 16))
         self.tarjeta_selector.grid_columnconfigure(0, weight=1)
@@ -261,9 +261,9 @@ class AppFutbol(ctk.CTk):
             command=lambda _valor: self._al_cambiar_ejercicio(),
             font=self.fuentes["texto_bold"],
             dropdown_font=self.fuentes["texto"],
-            fg_color="#1c2a37",
-            button_color="#1aa64f",
-            button_hover_color="#26d25f",
+            fg_color="#f5f5f5",
+            button_color="#c8e6c9",
+            button_hover_color="#aed581",
             text_color=ExpertoFutbol.TEXTO_PRIMARIO,
             corner_radius=12,
             height=42,
@@ -275,7 +275,7 @@ class AppFutbol(ctk.CTk):
             self.tarjeta_selector,
             text="(Partidos y goles)",
             font=self.fuentes["subtitulo"],
-            text_color="#71e54f",
+            text_color="#2e7d32",
         )
         self.descripcion_ejercicio_label.grid(row=1, column=0, sticky="ew", padx=12, pady=(0, 12))
 
@@ -297,10 +297,10 @@ class AppFutbol(ctk.CTk):
             to=20,
             number_of_steps=19,
             command=self._al_mover_slider,
-            progress_color="#00ff5a",
+            progress_color="#66bb6a",
             button_color="#d9d9d9",
             button_hover_color="#ffffff",
-            fg_color="#5d6773",
+            fg_color="#ffffff",
             height=18,
         )
         self.slider_k.grid(row=0, column=0, sticky="ew", padx=(4, 14), pady=6)
@@ -312,8 +312,8 @@ class AppFutbol(ctk.CTk):
             width=84,
             height=58,
             corner_radius=12,
-            fg_color="#116d31",
-            text_color="#f1fff4",
+            fg_color="#ffffff",
+            text_color="#111111",
             font=self.fuentes["k"],
         )
         self.valor_k_label.grid(row=0, column=1, sticky="e", padx=(0, 0))
@@ -350,13 +350,13 @@ class AppFutbol(ctk.CTk):
             self.panel_lateral,
             text="⬆  Mayor a Menor",
             command=lambda: self._set_orden(False),
-            fg_color="#168c3f",
-            hover_color="#1cba54",
-            text_color="#f5fff5",
+            fg_color="#e8f5e9",
+            hover_color="#dcedc8",
+            text_color="#111111",
             font=self.fuentes["titulo_medio"],
             corner_radius=12,
             border_width=2,
-            border_color="#7fff9d",
+            border_color="#c8e6c9",
             height=60,
         )
         self.boton_desc.grid(row=6, column=0, sticky="ew", padx=22, pady=(0, 10))
@@ -365,13 +365,13 @@ class AppFutbol(ctk.CTk):
             self.panel_lateral,
             text="⬇  Menor a Mayor",
             command=lambda: self._set_orden(True),
-            fg_color="#1c2833",
-            hover_color="#263341",
+            fg_color="#f5f5f5",
+            hover_color="#eeeeee",
             text_color=ExpertoFutbol.TEXTO_PRIMARIO,
             font=self.fuentes["titulo_medio"],
             corner_radius=12,
             border_width=2,
-            border_color="#4f6072",
+            border_color="#d9d9d9",
             height=60,
         )
         self.boton_asc.grid(row=7, column=0, sticky="ew", padx=22, pady=(0, 18))
@@ -380,13 +380,13 @@ class AppFutbol(ctk.CTk):
             self.panel_lateral,
             text="▶  Ejecutar Ejercicio",
             command=self._ejecutar_actual,
-            fg_color="#17913f",
-            hover_color="#1fd155",
-            text_color="#f7fff7",
+            fg_color="#e8f5e9",
+            hover_color="#dcedc8",
+            text_color="#111111",
             font=self.fuentes["titulo_medio"],
             corner_radius=14,
             border_width=2,
-            border_color="#9effb7",
+            border_color="#c8e6c9",
             height=72,
         )
         self.boton_ejecutar.grid(row=8, column=0, sticky="ew", padx=22, pady=(6, 18))
@@ -402,8 +402,8 @@ class AppFutbol(ctk.CTk):
         self.progressbar = ctk.CTkProgressBar(
             self.panel_lateral,
             mode="indeterminate",
-            progress_color="#00ff5a",
-            fg_color="#25313b",
+            progress_color="#66bb6a",
+            fg_color="#ffffff",
         )
         self.progressbar.grid(row=10, column=0, sticky="ew", padx=22, pady=(0, 18))
         self.progressbar.grid_remove()
@@ -419,10 +419,10 @@ class AppFutbol(ctk.CTk):
     def _crear_panel_resultados(self) -> None:
         self.panel_resultados = ctk.CTkFrame(
             self,
-            fg_color="#0f1823",
+            fg_color="#ffffff",
             corner_radius=22,
             border_width=2,
-            border_color="#466178",
+            border_color="#d9d9d9",
         )
         self.panel_resultados.grid(row=1, column=1, sticky="nsew", padx=(0, 24), pady=(0, 20))
         self.panel_resultados.grid_columnconfigure(0, weight=1)
@@ -446,10 +446,10 @@ class AppFutbol(ctk.CTk):
 
         self.tabla_frame = ctk.CTkFrame(
             self.panel_resultados,
-            fg_color="#101a26",
+            fg_color="#ffffff",
             corner_radius=16,
             border_width=2,
-            border_color="#23a84e",
+            border_color="#d9d9d9",
         )
         self.tabla_frame.grid(row=2, column=0, sticky="nsew", padx=18, pady=(0, 14))
         self.tabla_frame.grid_columnconfigure(0, weight=1)
@@ -457,7 +457,7 @@ class AppFutbol(ctk.CTk):
 
         self.tabla_header = ctk.CTkFrame(
             self.tabla_frame,
-            fg_color="#19833a",
+            fg_color="#e8f5e9",
             corner_radius=12,
         )
         self.tabla_header.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 8))
@@ -468,7 +468,7 @@ class AppFutbol(ctk.CTk):
             text="#",
             width=48,
             font=self.fuentes["subtitulo"],
-            text_color="#f7fff7",
+            text_color="#111111",
         )
         self.header_pos.grid(row=0, column=0, padx=(10, 6), pady=10)
 
@@ -477,7 +477,7 @@ class AppFutbol(ctk.CTk):
             text="Resultado",
             anchor="w",
             font=self.fuentes["subtitulo"],
-            text_color="#f7fff7",
+            text_color="#111111",
         )
         self.header_desc.grid(row=0, column=1, sticky="ew", padx=6, pady=10)
 
@@ -486,13 +486,13 @@ class AppFutbol(ctk.CTk):
             text="Valores",
             width=220,
             font=self.fuentes["subtitulo"],
-            text_color="#f7fff7",
+            text_color="#111111",
         )
         self.header_vals.grid(row=0, column=2, padx=(6, 16), pady=10)
 
         self.scroll_resultados = ctk.CTkScrollableFrame(
             self.tabla_frame,
-            fg_color="#0e1620",
+            fg_color="#ffffff",
             corner_radius=12,
         )
         self.scroll_resultados.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
@@ -502,13 +502,13 @@ class AppFutbol(ctk.CTk):
             self.panel_resultados,
             text="⬇  Guardar Resultados",
             command=self._guardar_resultados,
-            fg_color="#17913f",
-            hover_color="#1fd155",
-            text_color="#f7fff7",
+            fg_color="#e8f5e9",
+            hover_color="#dcedc8",
+            text_color="#111111",
             font=self.fuentes["titulo_medio"],
             corner_radius=14,
             border_width=2,
-            border_color="#9effb7",
+            border_color="#c8e6c9",
             height=60,
             width=360,
         )
@@ -545,29 +545,29 @@ class AppFutbol(ctk.CTk):
         self.orden_ascendente = bool(ascendente)
         if self.orden_ascendente:
             self.boton_asc.configure(
-                fg_color="#168c3f",
-                hover_color="#1cba54",
-                text_color="#f5fff5",
-                border_color="#7fff9d",
+                fg_color="#e8f5e9",
+                hover_color="#dcedc8",
+                text_color="#111111",
+                border_color="#c8e6c9",
             )
             self.boton_desc.configure(
-                fg_color="#1c2833",
-                hover_color="#263341",
+                fg_color="#f5f5f5",
+                hover_color="#eeeeee",
                 text_color=ExpertoFutbol.TEXTO_PRIMARIO,
-                border_color="#4f6072",
+                border_color="#d9d9d9",
             )
         else:
             self.boton_desc.configure(
-                fg_color="#168c3f",
-                hover_color="#1cba54",
-                text_color="#f5fff5",
-                border_color="#7fff9d",
+                fg_color="#e8f5e9",
+                hover_color="#dcedc8",
+                text_color="#111111",
+                border_color="#c8e6c9",
             )
             self.boton_asc.configure(
-                fg_color="#1c2833",
-                hover_color="#263341",
+                fg_color="#f5f5f5",
+                hover_color="#eeeeee",
                 text_color=ExpertoFutbol.TEXTO_PRIMARIO,
-                border_color="#4f6072",
+                border_color="#d9d9d9",
             )
 
     def _al_cambiar_ejercicio(self) -> None:
@@ -627,7 +627,8 @@ class AppFutbol(ctk.CTk):
 
     def _worker_cargar_excel(self, ruta: str) -> None:
         try:
-            experto = FactoriaFutbol.cargar_excel(ruta)
+            liga = FactoriaFutbol.cargar_excel(ruta)
+            experto = liga._construir_experto()
             self.after(0, lambda: self._fin_carga_correcta(experto, ruta))
         except Exception as error:
             self.after(0, lambda: self._fin_carga_error(error))
@@ -710,10 +711,10 @@ class AppFutbol(ctk.CTk):
         for indice, linea in enumerate(lineas, start=1):
             fila = ctk.CTkFrame(
                 self.scroll_resultados,
-                fg_color="#0d1722" if indice % 2 else "#101c28",
+                fg_color="#ffffff" if indice % 2 else "#fafafa",
                 corner_radius=10,
                 border_width=1,
-                border_color="#274055",
+                border_color="#e0e0e0",
             )
             fila.grid(row=indice - 1, column=0, sticky="ew", padx=8, pady=4)
             fila.grid_columnconfigure(1, weight=1)
@@ -752,7 +753,7 @@ class AppFutbol(ctk.CTk):
                     text=dato,
                     font=self.fuentes["texto_tabla"],
                     text_color=ExpertoFutbol.ACENTO_DORADO if re.search(r"\d", dato) else ExpertoFutbol.TEXTO_PRIMARIO,
-                    fg_color="#122232",
+                    fg_color="#ffffff",
                     corner_radius=10,
                     padx=14,
                     pady=8,
