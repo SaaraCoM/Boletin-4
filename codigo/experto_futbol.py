@@ -265,7 +265,7 @@ class ExpertoFutbol:
             "- F.C. Barcelona: Racha de 4 temporadas consecutivas siendo el máximo goleador.",
         ],
         30: [
-            "- Sevilla F.C. vs Real Betis B. S.: 9 jugadores. Ejemplos: ANTUNEZ, CARVAJAL, DIEGO R., JOSE MARI, MATEOS ...",
+            "- Sevilla F.C. vs Real Betis B. S. | Compartidos: 9 | Jugadores compartidos: ANTUNEZ, CARVAJAL, DIEGO R., JOSE MARI, MATEOS",
         ],
         31: [
             "- RAFA GONZALEZ: Promedio de 116.8 minutos por temporada (Total: 934 minutos en 8 temporadas).",
@@ -275,11 +275,11 @@ class ExpertoFutbol:
             "- NEBOT C.: Promedio de 546.0 minutos por temporada (Total: 4368 minutos en 8 temporadas).",
         ],
         32: [
-            "- UNZUE - Equipo: C. At. Osasuna, Años fuera: 14.",
-            "- A. PRATS - Equipo: R.C.D. Mallorca, Años fuera: 14.",
-            "- CAPDEVILA - Equipo: R.C.D. Espanyol, Años fuera: 14.",
-            "- ANGEL D. - Equipo: U.D. Las Palmas, Años fuera: 14.",
-            "- DEL SOL - Equipo: Real Betis B. S., Años fuera: 13.",
+            "- UNZUE (C. At. Osasuna) | Años fuera: 14",
+            "- A. PRATS (R.C.D. Mallorca) | Años fuera: 14",
+            "- CAPDEVILA (R.C.D. Espanyol) | Años fuera: 14",
+            "- ANGEL D. (U.D. Las Palmas) | Años fuera: 14",
+            "- DEL SOL (Real Betis B. S.) | Años fuera: 13",
         ],
         33: [
             "- ELDUAYEN: Racha de 8 temporadas consecutivas.",
@@ -368,6 +368,8 @@ class ExpertoFutbol:
         return list(filas[:limite])
 
     def _combinar_con_canonicos(self, numero: int, lineas: list[str]) -> list[str]:
+        if numero in (30, 32):
+            return list(lineas)
         canonicas = list(self.RESULTADOS_CANONICOS_PDF.get(numero, []))
         if not canonicas:
             return list(lineas)
@@ -862,14 +864,12 @@ class ExpertoFutbol:
 
             lineas: list[str] = []
             for numero, equipo_a, equipo_b, compartidos in datos:
+                lineas.append(f"- {equipo_a} vs {equipo_b} | Compartidos: {numero}")
                 if numero == 0:
-                    jugadores_texto = "ninguno"
+                    lineas.append("  - Jugador compartido: ninguno")
                 else:
-                    jugadores_texto = ", ".join(compartidos)
-
-                lineas.append(
-                    f"- {equipo_a} vs {equipo_b} | Compartidos: {numero} | Jugadores compartidos: {jugadores_texto}"
-                )
+                    for nombre_jugador in compartidos:
+                        lineas.append(f"  - Jugador compartido: {nombre_jugador}")
 
             return self._aplicar_k(lineas, k, ascendente)
 
