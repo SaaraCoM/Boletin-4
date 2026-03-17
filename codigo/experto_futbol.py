@@ -14,7 +14,7 @@ class ExpertoFutbol:
         10, 1, 1, 1, 1, 3, 5, 10, 3, 3,
         3, 5, 3, 3, 4, 10, 3, 5, 9,
         3, 11, 1, 10, 10, 10, 10, 12,
-        6, 3, 1, 5, 5, 3,
+        6, 3, 10, 5, 5, 3,
     )
 
     DESCRIPCIONES = (
@@ -368,6 +368,8 @@ class ExpertoFutbol:
         return list(filas[:limite])
 
     def _combinar_con_canonicos(self, numero: int, lineas: list[str]) -> list[str]:
+        if numero in (30, 32):
+            return list(lineas)
         canonicas = list(self.RESULTADOS_CANONICOS_PDF.get(numero, []))
         if not canonicas:
             return list(lineas)
@@ -844,25 +846,33 @@ class ExpertoFutbol:
     def ejercicio_30(self, k: int, ascendente: bool) -> list[str]:
         def productor() -> list[str]:
             jugadores_por_equipo: dict[str, set[str]] = {}
-            for equipo in self._equipos_ordenados():
-                jugadores_por_equipo[equipo] = {fila.nombre for fila in self._por_equipo[equipo]}
+            equipos_ordenados = self._equipos_ordenados()
+
+            for equipo in equipos_ordenados:
+                jugadores = set()
+                for fila in self._por_equipo[equipo]:
+                    jugadores.add(fila.nombre)
+                jugadores_por_equipo[equipo] = jugadores
+
             datos: list[tuple[int, str, str, list[str]]] = []
-            for equipo_a, equipo_b in combinations(self._equipos_ordenados(), 2):
-                compartidos = sorted(jugadores_por_equipo[equipo_a] & jugadores_por_equipo[equipo_b])
+            for equipo_a, equipo_b in combinations(equipos_ordenados, 2):
+                compartidos = list(jugadores_por_equipo[equipo_a] & jugadores_por_equipo[equipo_b])
+                compartidos.sort()
                 datos.append((len(compartidos), equipo_a, equipo_b, compartidos))
+
             datos.sort(key=lambda item: (-item[0], item[1], item[2]))
-            lineas = []
+
+            lineas: list[str] = []
             for numero, equipo_a, equipo_b, compartidos in datos:
-                if compartidos:
-                    jugadores_compartidos = ", ".join(compartidos)
-                    lineas.append(
-                        f"- {equipo_a} vs {equipo_b} | Compartidos: {numero} | Jugadores compartidos: {jugadores_compartidos}"
-                    )
+                lineas.append(f"- {equipo_a} vs {equipo_b} | Compartidos: {numero}")
+                if numero == 0:
+                    lineas.append("  - Jugador compartido: ninguno")
                 else:
-                    lineas.append(
-                        f"- {equipo_a} vs {equipo_b} | Compartidos: 0 | Jugadores compartidos: ninguno"
-                    )
+                    for nombre_jugador in compartidos:
+                        lineas.append(f"  - Jugador compartido: {nombre_jugador}")
+
             return self._aplicar_k(lineas, k, ascendente)
+
         return self._ejecutar_o_cachear(30, k, ascendente, productor)
 
     def ejercicio_31(self, k: int, ascendente: bool) -> list[str]:
