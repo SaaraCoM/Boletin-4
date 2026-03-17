@@ -10,6 +10,23 @@ def ejecutar_tests() -> tuple[object, str]:
     liga = Factoria.cargar_excel(ruta_excel)
     errores: list[str] = []
 
+    def validar_pre_ejecucion() -> None:
+        """Test previo: verifica que todas las ejecuciones (01..33) estén disponibles y devuelvan salida válida."""
+        for i in range(1, 34):
+            nombre_metodo = f"ejercicio_{i:02d}"
+            if not hasattr(liga, nombre_metodo):
+                raise AssertionError(f"Falta el método requerido: {nombre_metodo}")
+            metodo = getattr(liga, nombre_metodo)
+            salida = metodo(1, False)
+            if not isinstance(salida, list):
+                raise AssertionError(f"{nombre_metodo} debe devolver list[str]")
+            if not salida:
+                raise AssertionError(f"{nombre_metodo} no devolvió resultados")
+            if not all(isinstance(item, str) for item in salida):
+                raise AssertionError(f"{nombre_metodo} devolvió elementos no string")
+
+    validar_pre_ejecucion()
+
     def check(n: int, cond: bool, esperado: str, obtenido) -> None:
         if not cond:
             errores.append(f"❌ Ej{n:02d}: esperado '{esperado}', obtenido '{obtenido}'")
