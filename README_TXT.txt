@@ -8,6 +8,7 @@ EJERCICIO_4/
 │   ├── equipo.py
 │   ├── temporada.py
 │   ├── factoria_futbol.py
+│   ├── liga.py
 │   ├── interfaz.py
 │   └── ejecucion.py
 └── data/
@@ -43,14 +44,14 @@ EJERCICIO_4/
 5. ARCHIVO: liga.py
    Clase: Liga
    - Qué hace:
-     Implementa toda la lógica de negocio y los 33 ejercicios del Boletín 4.
+     Representa la raíz del modelo (Liga -> Temporadas -> Equipos -> Jugadores) e integra los ejercicios 01..33.
    - Cómo funciona:
-     Construye índices por jugador, nombre, equipo y temporada; luego calcula rankings, rachas, ascensos, descensos y agregaciones.
+     Recorre la jerarquía con `_iterar_historial`, construye índices internos y expone métodos de estadísticas históricas.
    - Funciones principales:
-     - _reconstruir_indices: prepara índices internos a partir de la jerarquía cargada.
-     - get_default_k: devuelve el K por defecto de cada ejercicio.
-     - descripcion_ejercicio: devuelve el texto corto del ejercicio.
-     - ejercicio_01 ... ejercicio_33: resuelven cada ejercicio y devuelven list[str].
+     - agregar_temporada
+     - _iterar_historial
+     - get_default_k / descripcion_ejercicio
+     - ejercicio_01 ... ejercicio_33
    - Ejemplo:
      liga = Factoria.cargar_excel(ruta_excel)
      top = liga.ejercicio_02(1, False)
@@ -73,10 +74,10 @@ EJERCICIO_4/
      - _leer_excel
      - _limpiar_filas
      - _asignar_jugador_id
-     - _crear_objetos
+     - _crear_liga
      - cargar_excel
    - Ejemplo:
-     experto = FactoriaFutbol.cargar_excel("../data/Plantillas1D-2017-18.xls")
+     liga = FactoriaFutbol.cargar_excel("../data/Plantillas1D-2017-18.xls")
 
 7. ARCHIVO: interfaz.py
    Clase: AppFutbol
@@ -91,11 +92,11 @@ EJERCICIO_4/
      - _rellenar_selector
      - _actualizar_k_desde_selector
      - cargar_excel
-     - _cargar_excel_worker
+     - _worker_cargar_excel
      - ejecutar_ejercicio
      - guardar_resultados
    - Ejemplo:
-     app = AppFutbol(experto_inicial=experto, ruta_inicial=ruta_excel)
+     app = AppFutbol(liga_inicial=liga, ruta_inicial=ruta_excel)
      app.mainloop()
 
 8. ARCHIVO: ejecucion.py

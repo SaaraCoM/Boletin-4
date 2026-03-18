@@ -3,9 +3,10 @@ from __future__ import annotations
 import sys
 
 from factoria_futbol import Factoria
+from liga import Liga
 
 
-def ejecutar_tests() -> tuple[object, str]:
+def ejecutar_tests() -> tuple[Liga, str]:
     ruta_excel = Factoria.resolver_ruta_excel("Plantillas1D-2017-18.xls")
     liga = Factoria.cargar_excel(ruta_excel)
     errores: list[str] = []
@@ -75,5 +76,5 @@ if __name__ == "__main__":
         print("pip install customtkinter openpyxl xlrd pillow")
         sys.exit(1)
 
-    app = AppFutbol(experto_inicial=liga, ruta_inicial=ruta_excel)
+    app = AppFutbol(liga_inicial=liga, ruta_inicial=ruta_excel)
     app.mainloop()

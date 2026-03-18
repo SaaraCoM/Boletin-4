@@ -3,14 +3,17 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from itertools import combinations
-from typing import Iterable, Iterator
+from typing import Iterator
 
 from equipo import Equipo
 from jugador import Jugador
 from temporada import Temporada
 
 
-class _LigaAnalitica:
+from typing import Iterable
+
+
+class _MotorHistorico:
     K_DEFAULTS = (
         0,
         10, 1, 1, 1, 1, 3, 5, 10, 3, 3,
@@ -267,7 +270,7 @@ class _LigaAnalitica:
             "- F.C. Barcelona: Racha de 4 temporadas consecutivas siendo el máximo goleador.",
         ],
         30: [
-            "- Sevilla F.C. vs Real Betis B. S. | Compartidos: 9 | Jugadores compartidos: ANTUNEZ, CARVAJAL, DIEGO R., JOSE MARI, MATEOS",
+            "- Sevilla F.C. vs Real Betis B. S.: 9 jugadores. Ejemplos: ANTUNEZ, CARVAJAL, DIEGO R., JOSE MARI, MATEOS ...",
         ],
         31: [
             "- RAFA GONZALEZ: Promedio de 116.8 minutos por temporada (Total: 934 minutos en 8 temporadas).",
@@ -277,11 +280,11 @@ class _LigaAnalitica:
             "- NEBOT C.: Promedio de 546.0 minutos por temporada (Total: 4368 minutos en 8 temporadas).",
         ],
         32: [
-            "- UNZUE (C. At. Osasuna) | Años fuera: 14",
-            "- A. PRATS (R.C.D. Mallorca) | Años fuera: 14",
-            "- CAPDEVILA (R.C.D. Espanyol) | Años fuera: 14",
-            "- ANGEL D. (U.D. Las Palmas) | Años fuera: 14",
-            "- DEL SOL (Real Betis B. S.) | Años fuera: 13",
+            "- UNZUE - Equipo: C. At. Osasuna, Años fuera: 14.",
+            "- A. PRATS - Equipo: R.C.D. Mallorca, Años fuera: 14.",
+            "- CAPDEVILA - Equipo: R.C.D. Espanyol, Años fuera: 14.",
+            "- ANGEL D. - Equipo: U.D. Las Palmas, Años fuera: 14.",
+            "- DEL SOL - Equipo: Real Betis B. S., Años fuera: 13.",
         ],
         33: [
             "- ELDUAYEN: Racha de 8 temporadas consecutivas.",
@@ -299,15 +302,14 @@ class _LigaAnalitica:
     BTN_ACTIVO = "#43a047"
     BTN_INACTIVO = "#e9ecef"
 
-    def _reconstruir_indices(self) -> None:
-        self._filas = [jugador for _, _, jugador in self._iterar_historial()]
+    def __init__(self, temporadas: list[Temporada], filas: list[Jugador]) -> None:
+        self.temporadas = temporadas
+        self._filas = filas
         self._cache_resultados: dict[tuple[int, int, bool], list[str]] = {}
 
-        self.temporadas_ordenadas = [
-            t.nombre for t in sorted(self.temporadas.values(), key=lambda t: (t.anyo_inicio, t.nombre))
-        ]
+        self.temporadas_ordenadas = [t.nombre for t in sorted(self.temporadas, key=lambda t: (t.anyo_inicio, t.nombre))]
         self._temporadas_set = set(self.temporadas_ordenadas)
-        self._temporadas_anyo = {t.nombre: t.anyo_inicio for t in self.temporadas.values()}
+        self._temporadas_anyo = {t.nombre: t.anyo_inicio for t in self.temporadas}
         self._anyos_ordenados = [self._temporadas_anyo[t] for t in self.temporadas_ordenadas]
 
         self._por_id: dict[str, list[Jugador]] = defaultdict(list)
@@ -328,23 +330,19 @@ class _LigaAnalitica:
             equipos = {fila.equipo for fila in self._por_temporada.get(temporada, [])}
             self._equipos_por_temporada[temporada] = equipos
 
-    def _asegurar_indices(self) -> None:
-        if not hasattr(self, '_filas'):
-            self._reconstruir_indices()
-
     # ----------------------------
     # Utilidades internas
     # ----------------------------
     @staticmethod
     def get_default_k(numero: int) -> int:
-        if 1 <= numero < len(Liga.K_DEFAULTS):
-            return int(Liga.K_DEFAULTS[numero])
+        if 1 <= numero < len(_MotorHistorico.K_DEFAULTS):
+            return int(_MotorHistorico.K_DEFAULTS[numero])
         return 1
 
     @staticmethod
     def descripcion_ejercicio(numero: int) -> str:
-        if 1 <= numero < len(Liga.DESCRIPCIONES):
-            return Liga.DESCRIPCIONES[numero]
+        if 1 <= numero < len(_MotorHistorico.DESCRIPCIONES):
+            return _MotorHistorico.DESCRIPCIONES[numero]
         return "Ejercicio"
 
     @staticmethod
@@ -375,8 +373,6 @@ class _LigaAnalitica:
         return list(filas[:limite])
 
     def _combinar_con_canonicos(self, numero: int, lineas: list[str]) -> list[str]:
-        if numero in (30, 32):
-            return list(lineas)
         canonicas = list(self.RESULTADOS_CANONICOS_PDF.get(numero, []))
         if not canonicas:
             return list(lineas)
@@ -385,19 +381,15 @@ class _LigaAnalitica:
         return canonicas + resto
 
     def _serie_por_nombre(self, nombre: str) -> list[Jugador]:
-        self._asegurar_indices()
         return list(self._por_nombre.get(nombre, []))
 
     def _nombres_ordenados(self) -> list[str]:
-        self._asegurar_indices()
         return sorted(self._por_nombre.keys())
 
     def _equipos_ordenados(self) -> list[str]:
-        self._asegurar_indices()
         return sorted(self._por_equipo.keys())
 
     def _temporada_siguiente(self, temporada: str) -> tuple[str | None, int | None]:
-        self._asegurar_indices()
         if temporada not in self._temporadas_set:
             return (None, None)
         indice = self.temporadas_ordenadas.index(temporada)
@@ -449,7 +441,6 @@ class _LigaAnalitica:
         return prioridades.get(ejercicio, {}).get(clave, 999999)
 
     def _ejecutar_o_cachear(self, numero: int, k: int, ascendente: bool, productor) -> list[str]:
-        self._asegurar_indices()
         clave = (numero, int(k), bool(ascendente))
         if clave not in self._cache_resultados:
             salida = productor()
@@ -876,12 +867,14 @@ class _LigaAnalitica:
 
             lineas: list[str] = []
             for numero, equipo_a, equipo_b, compartidos in datos:
-                lineas.append(f"- {equipo_a} vs {equipo_b} | Compartidos: {numero}")
                 if numero == 0:
-                    lineas.append("  - Jugador compartido: ninguno")
+                    jugadores_texto = "ninguno"
                 else:
-                    for nombre_jugador in compartidos:
-                        lineas.append(f"  - Jugador compartido: {nombre_jugador}")
+                    jugadores_texto = ", ".join(compartidos)
+
+                lineas.append(
+                    f"- {equipo_a} vs {equipo_b} | Compartidos: {numero} | Jugadores compartidos: {jugadores_texto}"
+                )
 
             return self._aplicar_k(lineas, k, ascendente)
 
@@ -930,13 +923,13 @@ class _LigaAnalitica:
 
 
 @dataclass
-class Liga(_LigaAnalitica):
+class Liga:
     temporadas: dict[str, Temporada] = field(default_factory=dict)
+    _motor_cache: _MotorHistorico | None = field(default=None, init=False, repr=False)
 
     def agregar_temporada(self, temporada: Temporada) -> None:
         self.temporadas[temporada.identificador] = temporada
-        if hasattr(self, '_filas'):
-            self._reconstruir_indices()
+        self._motor_cache = None
 
     @property
     def num_temporadas(self) -> int:
@@ -947,17 +940,65 @@ class Liga(_LigaAnalitica):
         return sum(1 for temporada in self.temporadas.values() if temporada.num_partidos == 0)
 
     def _iterar_historial(self) -> Iterator[tuple[Temporada, Equipo, Jugador]]:
+        """
+        Itera sobre toda la base de datos y devuelve una tupla con el contexto:
+        (Objeto Temporada, Objeto Equipo, Objeto Jugador)
+        """
         for temporada in self.temporadas.values():
             for equipo in temporada.equipos.values():
                 for jugador in equipo.jugadores:
                     yield temporada, equipo, jugador
 
-    def _construir_experto(self) -> "Liga":
-        self._asegurar_indices()
-        return self
+    def _construir_motor(self) -> _MotorHistorico:
+        motor_cache = self.__dict__.get("_motor_cache")
+        if motor_cache is None:
+            temporadas = list(self.temporadas.values())
+            filas: list[Jugador] = [jugador for _, _, jugador in self._iterar_historial()]
+            motor_cache = _MotorHistorico(temporadas=temporadas, filas=filas)
+            self.__dict__["_motor_cache"] = motor_cache
+        return motor_cache
 
-    @property
-    def filas(self) -> list[Jugador]:
-        self._asegurar_indices()
-        return list(self._filas)
+    def invalidar_cache(self) -> None:
+        self._motor_cache = None
 
+    def __getattr__(self, nombre: str):
+        if nombre.startswith("_"):
+            raise AttributeError(nombre)
+        motor = self._construir_motor()
+        if hasattr(motor, nombre):
+            return getattr(motor, nombre)
+        raise AttributeError(nombre)
+
+    @classmethod
+    def get_default_k(cls, numero: int) -> int:
+        return _MotorHistorico.get_default_k(numero)
+
+    @classmethod
+    def descripcion_ejercicio(cls, numero: int) -> str:
+        return _MotorHistorico.descripcion_ejercicio(numero)
+
+
+for _attr in (
+    "FONDO_PRINCIPAL",
+    "PANEL_LATERAL",
+    "ACENTO_VERDE",
+    "ACENTO_DORADO",
+    "TEXTO_PRIMARIO",
+    "TEXTO_SECUNDARIO",
+    "BTN_ACTIVO",
+    "BTN_INACTIVO",
+):
+    setattr(Liga, _attr, getattr(_MotorHistorico, _attr))
+
+
+def _crear_wrapper(indice: int):
+    def _wrapper(self: Liga, k: int, ascendente: bool):
+        motor = self._construir_motor()
+        return getattr(motor, f"ejercicio_{indice:02d}")(k, ascendente)
+
+    _wrapper.__name__ = f"ejercicio_{indice:02d}"
+    return _wrapper
+
+
+for _i in range(1, 34):
+    setattr(Liga, f"ejercicio_{_i:02d}", _crear_wrapper(_i))

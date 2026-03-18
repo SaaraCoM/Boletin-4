@@ -9,7 +9,7 @@ from tkinter import filedialog, messagebox
 import customtkinter as ctk
 
 from liga import Liga
-from factoria_futbol import FactoriaFutbol
+from factoria_futbol import Factoria
 
 try:
     from PIL import Image, ImageEnhance, ImageTk
@@ -57,12 +57,12 @@ class AppFutbol(ctk.CTk):
         33: ("Jugador", "Racha consecutiva"),
     }
 
-    def __init__(self, experto_inicial: Liga | None = None, ruta_inicial: str | None = None) -> None:
+    def __init__(self, liga_inicial: Liga | None = None, ruta_inicial: str | None = None) -> None:
         super().__init__()
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("green")
 
-        self.experto: Liga | None = experto_inicial
+        self.liga: Liga | None = liga_inicial
         self.ruta_excel_actual = ruta_inicial
         self._worker_activo = False
         self._ultimo_size_fondo: tuple[int, int] = (0, 0)
@@ -85,7 +85,7 @@ class AppFutbol(ctk.CTk):
 
         self.bind("<Configure>", self._al_redimensionar)
 
-        if self.experto is not None:
+        if self.liga is not None:
             self._actualizar_estado_cargado()
 
     # -----------------------------------------------------------------
@@ -573,14 +573,14 @@ class AppFutbol(ctk.CTk):
     def _al_cambiar_ejercicio(self) -> None:
         self._actualizar_texto_ejercicio()
         self._actualizar_k_desde_selector()
-        if self.experto is None:
+        if self.liga is None:
             self.estado_resultados.configure(text="Selecciona un ejercicio y ejecútalo.")
             return
         numero = self._numero_ejercicio_actual()
         k = int(round(self.slider_k.get()))
         clave = (numero, k, self.orden_ascendente)
-        if clave in self.experto._cache_resultados:
-            self._mostrar_lineas(self.experto._cache_resultados[clave])
+        if clave in self.liga._cache_resultados:
+            self._mostrar_lineas(self.liga._cache_resultados[clave])
 
     def _actualizar_k_desde_selector(self) -> None:
         numero = self._numero_ejercicio_actual()
@@ -590,13 +590,12 @@ class AppFutbol(ctk.CTk):
         self.valor_k_label.configure(text=str(k))
 
     def _actualizar_estado_cargado(self) -> None:
-        if self.experto is None:
+        if self.liga is None:
             self.estado_label.configure(text="⚠️ No hay Excel cargado.", text_color=Liga.TEXTO_SECUNDARIO)
             return
-        experto = self.experto._construir_experto()
-        numero_filas = len(experto.filas)
-        numero_temporadas = len(experto.temporadas_ordenadas)
-        numero_equipos = len(experto._por_equipo)
+        numero_filas = len(self.liga._filas)
+        numero_temporadas = len(self.liga.temporadas_ordenadas)
+        numero_equipos = len(self.liga._por_equipo)
         mensaje = f"✅ Cargado: {numero_filas} filas · {numero_temporadas} temporadas · {numero_equipos} equipos"
         self.estado_label.configure(text=mensaje, text_color=Liga.ACENTO_VERDE)
         self.estado_resultados.configure(text=mensaje, text_color=Liga.TEXTO_PRIMARIO)
@@ -628,14 +627,13 @@ class AppFutbol(ctk.CTk):
 
     def _worker_cargar_excel(self, ruta: str) -> None:
         try:
-            liga = FactoriaFutbol.cargar_excel(ruta)
-            experto = liga._construir_experto()
-            self.after(0, lambda: self._fin_carga_correcta(experto, ruta))
+            liga = Factoria.cargar_excel(ruta)
+            self.after(0, lambda: self._fin_carga_correcta(liga, ruta))
         except Exception as error:
             self.after(0, lambda: self._fin_carga_error(error))
 
-    def _fin_carga_correcta(self, experto: Liga, ruta: str) -> None:
-        self.experto = experto
+    def _fin_carga_correcta(self, liga: Liga, ruta: str) -> None:
+        self.liga = liga
         self.ruta_excel_actual = ruta
         self._worker_activo = False
         self.progressbar.stop()
@@ -765,14 +763,14 @@ class AppFutbol(ctk.CTk):
     # Ejecución y guardado
     # -----------------------------------------------------------------
     def _ejecutar_actual(self, mostrar_errores: bool = True) -> None:
-        if self.experto is None:
+        if self.liga is None:
             if mostrar_errores:
                 messagebox.showwarning("Sin datos", "Primero debes cargar un Excel.")
             return
         try:
             numero = self._numero_ejercicio_actual()
             k = int(round(self.slider_k.get()))
-            metodo = getattr(self.experto, f"ejercicio_{numero:02d}")
+            metodo = getattr(self.liga, f"ejercicio_{numero:02d}")
             resultados = metodo(k, self.orden_ascendente)
             self._mostrar_lineas(resultados)
             sentido = "Menor a Mayor" if self.orden_ascendente else "Mayor a Menor"
@@ -786,10 +784,10 @@ class AppFutbol(ctk.CTk):
                 messagebox.showerror("Error al ejecutar", str(error))
 
     def _guardar_resultados(self) -> None:
-        if self.experto is None:
+        if self.liga is None:
             messagebox.showwarning("Sin resultados", "Carga el Excel y ejecuta al menos un ejercicio antes de guardar.")
             return
-        if not self.experto._cache_resultados:
+        if not self.liga._cache_resultados:
             messagebox.showwarning("Sin resultados", "No hay ejercicios ejecutados para exportar.")
             return
 
@@ -810,9 +808,9 @@ class AppFutbol(ctk.CTk):
 
         try:
             bloques: list[str] = []
-            for numero, k, ascendente in sorted(self.experto._cache_resultados.keys()):
+            for numero, k, ascendente in sorted(self.liga._cache_resultados.keys()):
                 bloques.append(f"═══ EJERCICIO {numero:02d} ═══")
-                bloques.extend(self.experto._cache_resultados[(numero, k, ascendente)])
+                bloques.extend(self.liga._cache_resultados[(numero, k, ascendente)])
                 bloques.append("")
             with open(ruta, "w", encoding="utf-8") as fichero:
                 fichero.write("\n".join(bloques).rstrip() + "\n")
