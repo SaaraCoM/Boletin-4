@@ -7,7 +7,6 @@ EJERCICIO_4/
 │   ├── jugador.py
 │   ├── equipo.py
 │   ├── temporada.py
-│   ├── experto_futbol.py
 │   ├── factoria_futbol.py
 │   ├── interfaz.py
 │   └── ejecucion.py
@@ -41,25 +40,25 @@ EJERCICIO_4/
    - Ejemplo:
      Temporada("2011-12", 2011, lista_de_equipos)
 
-5. ARCHIVO: experto_futbol.py
-   Clase: ExpertoFutbol
+5. ARCHIVO: liga.py
+   Clase: Liga
    - Qué hace:
      Implementa toda la lógica de negocio y los 33 ejercicios del Boletín 4.
    - Cómo funciona:
      Construye índices por jugador, nombre, equipo y temporada; luego calcula rankings, rachas, ascensos, descensos y agregaciones.
    - Funciones principales:
-     - __init__: prepara índices internos.
+     - _reconstruir_indices: prepara índices internos a partir de la jerarquía cargada.
      - get_default_k: devuelve el K por defecto de cada ejercicio.
      - descripcion_ejercicio: devuelve el texto corto del ejercicio.
      - ejercicio_01 ... ejercicio_33: resuelven cada ejercicio y devuelven list[str].
    - Ejemplo:
-     experto = ExpertoFutbol(temporadas, filas)
-     top = experto.ejercicio_02(1, False)
+     liga = Factoria.cargar_excel(ruta_excel)
+     top = liga.ejercicio_02(1, False)
 
 6. ARCHIVO: factoria_futbol.py
    Clase: FactoriaFutbol
    - Qué hace:
-     Carga el Excel, limpia los datos y construye el objeto ExpertoFutbol.
+     Carga el Excel, limpia los datos y construye el objeto Liga.
    - Cómo funciona:
      1) localiza el archivo;
      2) abre .xls con xlrd o, si no está disponible, convierte offline a .xlsx;

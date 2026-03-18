@@ -6,7 +6,7 @@ Este proyecto carga un Excel histórico de La Liga y calcula 33 ejercicios estad
 El flujo general es:
 1. **Factoria** lee y valida datos del Excel.
 2. Construye la jerarquía POO: **Liga -> Temporada -> Equipo -> Jugador**.
-3. La clase **Liga** permite recorrer todo el historial y delega los 33 ejercicios a **ExpertoFutbol**.
+3. La clase **Liga** permite recorrer todo el historial y integra directamente los 33 ejercicios históricos dentro de **Liga**.
 4. `ejecucion.py` ejecuta pruebas internas y, si todo va bien, arranca la interfaz Tkinter.
 
 ---
@@ -41,16 +41,13 @@ El flujo general es:
 - Método `agregar_temporada`.
 - Propiedades derivadas de liga.
 - Método `_iterar_historial` para recorrer toda la estructura.
-- Wrappers `ejercicio_01` a `ejercicio_33` para reutilizar la lógica histórica de `ExpertoFutbol`.
+- Métodos `ejercicio_01` a `ejercicio_33` implementados directamente en `Liga`.
+- Mantiene resultados canónicos de referencia para asegurar formato esperado.
 
 ### `codigo/factoria_futbol.py`
 - Clase `Factoria` (y alias `FactoriaFutbol` para compatibilidad).
 - Lee Excel (`.xls` / `.xlsx`), limpia y valida datos.
 - Construye y devuelve un objeto `Liga`.
-
-### `codigo/experto_futbol.py`
-- Implementa la lógica de los 33 ejercicios históricos.
-- Mantiene resultados canónicos de referencia para asegurar formato esperado.
 
 ### `codigo/ejecucion.py`
 - Punto de entrada.
@@ -304,7 +301,7 @@ Ejercicio 33
 ## 4) Cambios respecto a la primera versión
 
 1. **Arquitectura POO Boletín 5**
-   - Se pasó de un enfoque centrado en `ExpertoFutbol` a una jerarquía explícita con `Liga`, `Temporada`, `Equipo` y `Jugador`.
+   - Se consolidó toda la lógica analítica en `Liga`, manteniendo la jerarquía `Liga`, `Temporada`, `Equipo` y `Jugador`.
 
 2. **Factoría de carga**
    - `Factoria` ahora construye `Liga` y no solo un objeto experto directo.
@@ -318,7 +315,7 @@ Ejercicio 33
    - Se añadió `_iterar_historial` en `Liga` para recorrer temporadas/equipos/jugadores de forma uniforme.
 
 5. **Compatibilidad con ejercicios históricos**
-   - Se mantuvieron los 33 ejercicios históricos en `ExpertoFutbol` usando wrappers en `Liga`.
+   - Los 33 ejercicios históricos quedaron integrados directamente en `Liga`.
 
 6. **Interfaz y ejecución**
    - `ejecucion.py` y `interfaz.py` se adaptaron para trabajar con `Liga` como objeto raíz.
