@@ -950,17 +950,19 @@ class Liga:
                     yield temporada, equipo, jugador
 
     def _construir_motor(self) -> _MotorHistorico:
-        if self._motor_cache is None:
+        motor_cache = self.__dict__.get("_motor_cache")
+        if motor_cache is None:
             temporadas = list(self.temporadas.values())
             filas: list[Jugador] = [jugador for _, _, jugador in self._iterar_historial()]
-            self._motor_cache = _MotorHistorico(temporadas=temporadas, filas=filas)
-        return self._motor_cache
+            motor_cache = _MotorHistorico(temporadas=temporadas, filas=filas)
+            self.__dict__["_motor_cache"] = motor_cache
+        return motor_cache
 
     def invalidar_cache(self) -> None:
         self._motor_cache = None
 
     def __getattr__(self, nombre: str):
-        if nombre.startswith("__"):
+        if nombre.startswith("_"):
             raise AttributeError(nombre)
         motor = self._construir_motor()
         if hasattr(motor, nombre):
