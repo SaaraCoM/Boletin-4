@@ -41,7 +41,7 @@ El flujo general es:
 - Método `agregar_temporada`.
 - Propiedades derivadas de liga.
 - Método `_iterar_historial` para recorrer toda la estructura.
-- Wrappers `ejercicio_01` a `ejercicio_33` para ejecutar la lógica histórica integrada en `Liga`.
+- Métodos `ejercicio_01` a `ejercicio_33` expuestos desde `Liga` mediante delegación interna al motor histórico integrado.
 
 ### `codigo/factoria_futbol.py`
 - Clase `Factoria` (y alias `FactoriaFutbol` para compatibilidad).

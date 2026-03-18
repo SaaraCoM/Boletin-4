@@ -74,7 +74,7 @@ EJERCICIO_4/
      - _leer_excel
      - _limpiar_filas
      - _asignar_jugador_id
-     - _crear_objetos
+     - _crear_liga
      - cargar_excel
    - Ejemplo:
      liga = FactoriaFutbol.cargar_excel("../data/Plantillas1D-2017-18.xls")
@@ -92,7 +92,7 @@ EJERCICIO_4/
      - _rellenar_selector
      - _actualizar_k_desde_selector
      - cargar_excel
-     - _cargar_excel_worker
+     - _worker_cargar_excel
      - ejecutar_ejercicio
      - guardar_resultados
    - Ejemplo:
