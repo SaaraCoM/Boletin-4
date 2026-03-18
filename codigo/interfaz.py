@@ -57,10 +57,21 @@ class AppFutbol(ctk.CTk):
         33: ("Jugador", "Racha consecutiva"),
     }
 
-    def __init__(self, experto_inicial: ExpertoFutbol | None = None, ruta_inicial: str | None = None) -> None:
+    def __init__(
+        self,
+        experto_inicial: ExpertoFutbol | None = None,
+        ruta_inicial: str | None = None,
+        liga_inicial=None,
+    ) -> None:
         super().__init__()
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("green")
+
+        if experto_inicial is None and liga_inicial is not None:
+            if hasattr(liga_inicial, "_construir_experto"):
+                experto_inicial = liga_inicial._construir_experto()
+            else:
+                raise TypeError("liga_inicial debe ser un objeto compatible con _construir_experto()")
 
         self.experto: ExpertoFutbol | None = experto_inicial
         self.ruta_excel_actual = ruta_inicial
@@ -593,9 +604,10 @@ class AppFutbol(ctk.CTk):
         if self.experto is None:
             self.estado_label.configure(text="⚠️ No hay Excel cargado.", text_color=ExpertoFutbol.TEXTO_SECUNDARIO)
             return
-        numero_filas = len(self.experto._filas)
-        numero_temporadas = len(self.experto.temporadas_ordenadas)
-        numero_equipos = len(self.experto._por_equipo)
+
+        numero_filas = len(getattr(self.experto, "_filas", []))
+        numero_temporadas = len(getattr(self.experto, "temporadas_ordenadas", []))
+        numero_equipos = len(getattr(self.experto, "_por_equipo", {}))
         mensaje = f"✅ Cargado: {numero_filas} filas · {numero_temporadas} temporadas · {numero_equipos} equipos"
         self.estado_label.configure(text=mensaje, text_color=ExpertoFutbol.ACENTO_VERDE)
         self.estado_resultados.configure(text=mensaje, text_color=ExpertoFutbol.TEXTO_PRIMARIO)
