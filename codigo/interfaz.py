@@ -9,7 +9,7 @@ from tkinter import filedialog, messagebox
 import customtkinter as ctk
 
 from liga import Liga
-from factoria_futbol import FactoriaFutbol
+from factoria_futbol import Factoria
 
 try:
     from PIL import Image, ImageEnhance, ImageTk
@@ -627,7 +627,7 @@ class AppFutbol(ctk.CTk):
 
     def _worker_cargar_excel(self, ruta: str) -> None:
         try:
-            liga = FactoriaFutbol.cargar_excel(ruta)
+            liga = Factoria.cargar_excel(ruta)
             self.after(0, lambda: self._fin_carga_correcta(liga, ruta))
         except Exception as error:
             self.after(0, lambda: self._fin_carga_error(error))

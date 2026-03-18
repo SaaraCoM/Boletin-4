@@ -3,9 +3,10 @@ from __future__ import annotations
 import sys
 
 from factoria_futbol import Factoria
+from liga import Liga
 
 
-def ejecutar_tests() -> tuple[object, str]:
+def ejecutar_tests() -> tuple[Liga, str]:
     ruta_excel = Factoria.resolver_ruta_excel("Plantillas1D-2017-18.xls")
     liga = Factoria.cargar_excel(ruta_excel)
     errores: list[str] = []

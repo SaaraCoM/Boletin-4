@@ -44,7 +44,7 @@ El flujo general es:
 - Métodos `ejercicio_01` a `ejercicio_33` expuestos desde `Liga` mediante delegación interna al motor histórico integrado.
 
 ### `codigo/factoria_futbol.py`
-- Clase `Factoria` (y alias `FactoriaFutbol` para compatibilidad).
+- Clase `Factoria` como punto único de carga desde Excel.
 - Lee Excel (`.xls` / `.xlsx`), limpia y valida datos.
 - Construye y devuelve un objeto `Liga`.
 
@@ -317,6 +317,6 @@ Ejercicio 33
    - Los 33 ejercicios históricos quedaron integrados dentro de `Liga`, eliminando el módulo `experto_futbol.py`.
 
 6. **Interfaz y ejecución**
-   - `ejecucion.py` y `interfaz.py` se adaptaron para trabajar con `Liga` como objeto raíz.
+   - `ejecucion.py` y `interfaz.py` trabajan con `Liga` como objeto raíz y cargan datos mediante `Factoria`.
    - Se añadieron comprobaciones previas en la ejecución para validar disponibilidad de ejercicios.
 
