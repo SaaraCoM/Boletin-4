@@ -75,5 +75,5 @@ if __name__ == "__main__":
         print("pip install customtkinter openpyxl xlrd pillow")
         sys.exit(1)
 
-    app = AppFutbol(experto_inicial=liga._construir_experto(), ruta_inicial=ruta_excel)
+    app = AppFutbol(experto_inicial=liga, ruta_inicial=ruta_excel)
     app.mainloop()

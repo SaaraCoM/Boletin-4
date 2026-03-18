@@ -8,7 +8,7 @@ from tkinter import filedialog, messagebox
 
 import customtkinter as ctk
 
-from experto_futbol import ExpertoFutbol
+from liga import Liga
 from factoria_futbol import FactoriaFutbol
 
 try:
@@ -57,12 +57,12 @@ class AppFutbol(ctk.CTk):
         33: ("Jugador", "Racha consecutiva"),
     }
 
-    def __init__(self, experto_inicial: ExpertoFutbol | None = None, ruta_inicial: str | None = None) -> None:
+    def __init__(self, experto_inicial: Liga | None = None, ruta_inicial: str | None = None) -> None:
         super().__init__()
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("green")
 
-        self.experto: ExpertoFutbol | None = experto_inicial
+        self.experto: Liga | None = experto_inicial
         self.ruta_excel_actual = ruta_inicial
         self._worker_activo = False
         self._ultimo_size_fondo: tuple[int, int] = (0, 0)
@@ -74,7 +74,7 @@ class AppFutbol(ctk.CTk):
         self.title("Análisis de Datos de Fútbol")
         self.minsize(900, 600)
         self.geometry("1365x768")
-        self.configure(fg_color=ExpertoFutbol.FONDO_PRINCIPAL)
+        self.configure(fg_color=Liga.FONDO_PRINCIPAL)
 
         self._crear_fondo_opcional()
         self.fuentes = self._crear_fuentes()
@@ -188,7 +188,7 @@ class AppFutbol(ctk.CTk):
             self.cabecera,
             text="⚽",
             font=ctk.CTkFont(size=42, weight="bold"),
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
         )
         self.icono_label.grid(row=0, column=0, rowspan=2, sticky="w", padx=(22, 12), pady=16)
 
@@ -196,7 +196,7 @@ class AppFutbol(ctk.CTk):
             self.cabecera,
             text="ANÁLISIS DE DATOS DE FÚTBOL",
             font=self.fuentes["titulo"],
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
         )
         self.titulo_label.grid(row=0, column=1, sticky="w", padx=4, pady=(18, 2))
 
@@ -204,7 +204,7 @@ class AppFutbol(ctk.CTk):
             self.cabecera,
             text="⚠️ No hay Excel cargado.",
             font=self.fuentes["texto"],
-            text_color=ExpertoFutbol.TEXTO_SECUNDARIO,
+            text_color=Liga.TEXTO_SECUNDARIO,
         )
         self.estado_label.grid(row=1, column=1, sticky="w", padx=4, pady=(0, 16))
 
@@ -241,7 +241,7 @@ class AppFutbol(ctk.CTk):
             self.panel_lateral,
             text="SELECCIONAR EJERCICIO",
             font=self.fuentes["titulo_medio"],
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
         )
         self.panel_titulo.grid(row=0, column=0, sticky="ew", padx=22, pady=(18, 12))
 
@@ -264,7 +264,7 @@ class AppFutbol(ctk.CTk):
             fg_color="#f5f5f5",
             button_color="#c8e6c9",
             button_hover_color="#aed581",
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
             corner_radius=12,
             height=42,
             dynamic_resizing=False,
@@ -283,7 +283,7 @@ class AppFutbol(ctk.CTk):
             self.panel_lateral,
             text="Seleccionar K :",
             font=self.fuentes["titulo_medio"],
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
         )
         self.k_titulo.grid(row=2, column=0, sticky="w", padx=22, pady=(2, 8))
 
@@ -326,21 +326,21 @@ class AppFutbol(ctk.CTk):
             self.rango_k_frame,
             text="1",
             font=self.fuentes["texto_bold"],
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
         ).grid(row=0, column=0, sticky="w")
 
         ctk.CTkLabel(
             self.rango_k_frame,
             text="20",
             font=self.fuentes["texto_bold"],
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
         ).grid(row=0, column=2, sticky="e")
 
         self.orden_titulo = ctk.CTkLabel(
             self.panel_lateral,
             text="Ordenar:",
             font=self.fuentes["titulo_medio"],
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
         )
         self.orden_titulo.grid(row=5, column=0, sticky="w", padx=22, pady=(0, 10))
 
@@ -367,7 +367,7 @@ class AppFutbol(ctk.CTk):
             command=lambda: self._set_orden(True),
             fg_color="#f5f5f5",
             hover_color="#eeeeee",
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
             font=self.fuentes["titulo_medio"],
             corner_radius=12,
             border_width=2,
@@ -395,7 +395,7 @@ class AppFutbol(ctk.CTk):
             self.panel_lateral,
             text="",
             font=self.fuentes["texto"],
-            text_color=ExpertoFutbol.TEXTO_SECUNDARIO,
+            text_color=Liga.TEXTO_SECUNDARIO,
         )
         self.texto_progreso.grid(row=9, column=0, sticky="w", padx=22, pady=(0, 6))
 
@@ -412,7 +412,7 @@ class AppFutbol(ctk.CTk):
             self.panel_lateral,
             text="⚽ Históricos de Primera División · Offline",
             font=self.fuentes["etiqueta"],
-            text_color=ExpertoFutbol.TEXTO_SECUNDARIO,
+            text_color=Liga.TEXTO_SECUNDARIO,
         )
         self.nota_inferior.grid(row=11, column=0, sticky="sw", padx=22, pady=(8, 18))
 
@@ -432,7 +432,7 @@ class AppFutbol(ctk.CTk):
             self.panel_resultados,
             text="Resultados",
             font=self.fuentes["titulo"],
-            text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+            text_color=Liga.TEXTO_PRIMARIO,
         )
         self.resultados_titulo.grid(row=0, column=0, sticky="n", pady=(18, 6))
 
@@ -440,7 +440,7 @@ class AppFutbol(ctk.CTk):
             self.panel_resultados,
             text="Selecciona un ejercicio y ejecútalo.",
             font=self.fuentes["texto"],
-            text_color=ExpertoFutbol.TEXTO_SECUNDARIO,
+            text_color=Liga.TEXTO_SECUNDARIO,
         )
         self.estado_resultados.grid(row=1, column=0, sticky="ew", padx=18, pady=(0, 8))
 
@@ -519,7 +519,7 @@ class AppFutbol(ctk.CTk):
     # -----------------------------------------------------------------
     def _rellenar_selector(self) -> None:
         opciones = [
-            f"Ejercicio {numero:02d} - {ExpertoFutbol.descripcion_ejercicio(numero)}"
+            f"Ejercicio {numero:02d} - {Liga.descripcion_ejercicio(numero)}"
             for numero in range(1, 34)
         ]
         self.selector_ejercicio.configure(values=opciones)
@@ -534,7 +534,7 @@ class AppFutbol(ctk.CTk):
 
     def _actualizar_texto_ejercicio(self) -> None:
         numero = self._numero_ejercicio_actual()
-        descripcion = ExpertoFutbol.descripcion_ejercicio(numero)
+        descripcion = Liga.descripcion_ejercicio(numero)
         self.descripcion_ejercicio_label.configure(text=f"({descripcion})")
 
     def _al_mover_slider(self, valor: float) -> None:
@@ -553,7 +553,7 @@ class AppFutbol(ctk.CTk):
             self.boton_desc.configure(
                 fg_color="#f5f5f5",
                 hover_color="#eeeeee",
-                text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+                text_color=Liga.TEXTO_PRIMARIO,
                 border_color="#d9d9d9",
             )
         else:
@@ -566,7 +566,7 @@ class AppFutbol(ctk.CTk):
             self.boton_asc.configure(
                 fg_color="#f5f5f5",
                 hover_color="#eeeeee",
-                text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+                text_color=Liga.TEXTO_PRIMARIO,
                 border_color="#d9d9d9",
             )
 
@@ -584,21 +584,22 @@ class AppFutbol(ctk.CTk):
 
     def _actualizar_k_desde_selector(self) -> None:
         numero = self._numero_ejercicio_actual()
-        k = ExpertoFutbol.get_default_k(numero)
+        k = Liga.get_default_k(numero)
         k = max(1, min(20, k))
         self.slider_k.set(k)
         self.valor_k_label.configure(text=str(k))
 
     def _actualizar_estado_cargado(self) -> None:
         if self.experto is None:
-            self.estado_label.configure(text="⚠️ No hay Excel cargado.", text_color=ExpertoFutbol.TEXTO_SECUNDARIO)
+            self.estado_label.configure(text="⚠️ No hay Excel cargado.", text_color=Liga.TEXTO_SECUNDARIO)
             return
-        numero_filas = len(self.experto._filas)
-        numero_temporadas = len(self.experto.temporadas_ordenadas)
-        numero_equipos = len(self.experto._por_equipo)
+        experto = self.experto._construir_experto()
+        numero_filas = len(experto.filas)
+        numero_temporadas = len(experto.temporadas_ordenadas)
+        numero_equipos = len(experto._por_equipo)
         mensaje = f"✅ Cargado: {numero_filas} filas · {numero_temporadas} temporadas · {numero_equipos} equipos"
-        self.estado_label.configure(text=mensaje, text_color=ExpertoFutbol.ACENTO_VERDE)
-        self.estado_resultados.configure(text=mensaje, text_color=ExpertoFutbol.TEXTO_PRIMARIO)
+        self.estado_label.configure(text=mensaje, text_color=Liga.ACENTO_VERDE)
+        self.estado_resultados.configure(text=mensaje, text_color=Liga.TEXTO_PRIMARIO)
 
     # -----------------------------------------------------------------
     # Carga del Excel
@@ -633,7 +634,7 @@ class AppFutbol(ctk.CTk):
         except Exception as error:
             self.after(0, lambda: self._fin_carga_error(error))
 
-    def _fin_carga_correcta(self, experto: ExpertoFutbol, ruta: str) -> None:
+    def _fin_carga_correcta(self, experto: Liga, ruta: str) -> None:
         self.experto = experto
         self.ruta_excel_actual = ruta
         self._worker_activo = False
@@ -685,7 +686,7 @@ class AppFutbol(ctk.CTk):
         return limpia, []
 
     def _configurar_header_tabla(self, numero_ejercicio: int) -> None:
-        descripcion = ExpertoFutbol.descripcion_ejercicio(numero_ejercicio)
+        descripcion = Liga.descripcion_ejercicio(numero_ejercicio)
         encabezado_izq, encabezado_der = self.ENCABEZADOS_RESULTADOS.get(
             numero_ejercicio,
             ("Resultado", "Valores"),
@@ -695,7 +696,7 @@ class AppFutbol(ctk.CTk):
         self.header_vals.configure(text=encabezado_der)
         self.estado_resultados.configure(
             text=f"Ejercicio {numero_ejercicio:02d} · {descripcion}",
-            text_color=ExpertoFutbol.TEXTO_SECUNDARIO,
+            text_color=Liga.TEXTO_SECUNDARIO,
         )
 
     def _mostrar_lineas(self, lineas: list[str]) -> None:
@@ -724,7 +725,7 @@ class AppFutbol(ctk.CTk):
                 text=f"{indice}.",
                 width=54,
                 font=self.fuentes["numero_fila"],
-                text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+                text_color=Liga.TEXTO_PRIMARIO,
             )
             posicion.grid(row=0, column=0, padx=(12, 8), pady=10)
 
@@ -734,7 +735,7 @@ class AppFutbol(ctk.CTk):
                 fila,
                 text=descripcion,
                 font=self.fuentes["texto_tabla"],
-                text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+                text_color=Liga.TEXTO_PRIMARIO,
                 justify="left",
                 anchor="w",
                 wraplength=700,
@@ -752,7 +753,7 @@ class AppFutbol(ctk.CTk):
                     datos_frame,
                     text=dato,
                     font=self.fuentes["texto_tabla"],
-                    text_color=ExpertoFutbol.ACENTO_DORADO if re.search(r"\d", dato) else ExpertoFutbol.TEXTO_PRIMARIO,
+                    text_color=Liga.ACENTO_DORADO if re.search(r"\d", dato) else Liga.TEXTO_PRIMARIO,
                     fg_color="#ffffff",
                     corner_radius=10,
                     padx=14,
@@ -775,10 +776,10 @@ class AppFutbol(ctk.CTk):
             resultados = metodo(k, self.orden_ascendente)
             self._mostrar_lineas(resultados)
             sentido = "Menor a Mayor" if self.orden_ascendente else "Mayor a Menor"
-            descripcion = ExpertoFutbol.descripcion_ejercicio(numero)
+            descripcion = Liga.descripcion_ejercicio(numero)
             self.estado_resultados.configure(
                 text=f"Ejercicio {numero:02d} · {descripcion} · K={k} · Orden: {sentido}",
-                text_color=ExpertoFutbol.TEXTO_PRIMARIO,
+                text_color=Liga.TEXTO_PRIMARIO,
             )
         except Exception as error:
             if mostrar_errores:
